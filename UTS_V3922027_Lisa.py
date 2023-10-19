@@ -1,0 +1,97 @@
+# Mendefinisikan fungsi enkripsi Caesar Cipher
+def caesar_cipher_encrypt(text, shift):
+    encrypted_text = ""
+    # Mengiterasi melalui setiap karakter dalam teks
+    for char in text:
+        # Memeriksa apakah karakter adalah huruf
+        if char.isalpha():
+            # Menggeser nilai Unicode karakter
+            shifted = ord(char) + shift
+            # Jika huruf kecil
+            if char.islower():
+                # Menggunakan modulus 26 untuk mendapatkan hasil di dalam rentang huruf kecil
+                encrypted_text += chr((shifted - 97) % 26 + 97)
+            # Jika huruf besar
+            else:
+                # Menggunakan modulus 26 untuk mendapatkan hasil di dalam rentang huruf besar
+                encrypted_text += chr((shifted - 65) % 26 + 65)
+        # Jika karakter bukan huruf
+        else:
+            # Menambahkan karakter asli ke teks terenkripsi
+            encrypted_text += char
+    return encrypted_text
+
+def caesar_cipher_decrypt(text, shift):
+    return caesar_cipher_encrypt(text, -shift)
+
+
+# Mendefinisikan fungsi enkripsi Vigenere Cipher
+def vigenere_cipher_encrypt(text, key):
+    encrypted_text = ""
+    # Mengulang kunci sampai panjangnya sama dengan teks
+    key_repeated = key * (len(text) // len(key)) + key[:len(text) % len(key)]
+    # Mengiterasi melalui setiap karakter dalam teks
+    for i in range(len(text)):
+        char = text[i]
+        # Memeriksa apakah karakter adalah huruf
+        if char.isalpha():
+            # Menghitung pergeseran berdasarkan huruf kunci
+            shift = ord(key_repeated[i].lower()) - 97
+            # Menggeser nilai Unicode karakter
+            shifted = ord(char) + shift
+            # Jika huruf kecil
+            if char.islower():
+                # Menggunakan modulus 26 untuk mendapatkan hasil di dalam rentang huruf kecil
+                encrypted_text += chr((shifted - 97) % 26 + 97)
+            # Jika huruf besar
+            else:
+                # Menggunakan modulus 26 untuk mendapatkan hasil di dalam rentang huruf besar
+                encrypted_text += chr((shifted - 65) % 26 + 65)
+        # Jika karakter bukan huruf
+        else:
+            # Menambahkan karakter asli ke teks terenkripsi
+            encrypted_text += char
+    return encrypted_text
+
+def vigenere_cipher_decrypt(text, key):
+    decrypted_text = ""
+    key_repeated = key * (len(text) // len(key)) + key[:len(text) % len(key)]
+    for i in range(len(text)):
+        char = text[i]
+        if char.isalpha():
+            shift = ord(key_repeated[i].lower()) - 97
+            shifted = ord(char) - shift
+            if char.islower():
+                decrypted_text += chr((shifted - 97) % 26 + 97)
+            else:
+                decrypted_text += chr((shifted - 65) % 26 + 65)
+        else:
+            decrypted_text += char
+    return decrypted_text
+
+# Kunci untuk Vigenere Cipher
+key_vigenere = "lisa"
+
+# Teks yang dienkripsi
+teks = "Success is not final, failure is not fatal, it is the courage to continue that counts."
+
+# Mengenkripsi dengan Vigenere Cipher menggunakan kunci "lisa"
+teks_vigenere_encrypted = vigenere_cipher_encrypt(teks, key_vigenere)
+
+# Teks yang dienkripsi dengan Vigenere Cipher kemudian dienkripsi lagi menggunakan Caesar Cipher dengan pergeseran 3
+teks_caesar_encrypted = caesar_cipher_encrypt(teks_vigenere_encrypted, 3)
+
+print("Teks yang Dienkripsi:")
+print(teks_caesar_encrypted)
+
+# Mendekripsi dengan Caesar Cipher dengan pergeseran 3
+teks_caesar_decrypted = caesar_cipher_decrypt(teks_caesar_encrypted, 3)
+
+# Mendekripsi dengan Vigenere Cipher menggunakan kunci "lisa"
+teks_vigenere_decrypted = vigenere_cipher_decrypt(teks_caesar_decrypted, key_vigenere)
+
+print("Teks yang Dideskripsi:")
+print(teks_vigenere_decrypted)
+
+
+
